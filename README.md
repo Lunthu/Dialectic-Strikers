@@ -1,6 +1,6 @@
 # ⚽ Dialectic Strikers – Philosopher Football Manager
 
-A browser-based tactical football simulation where philosophy takes the pitch._
+_A browser-based tactical football simulation where philosophy takes the pitch._
 
 ## 🧠 Overview
 
