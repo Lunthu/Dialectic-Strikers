@@ -1,1071 +1,1102 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Dialectic Strikers: Greeks vs. Germans</title>
-<style>
-  :root {
-    --bg: #0e1117;
-    --panel: #161b22;
-    --text: #c9d1d9;
-    --muted: #8b949e;
-    --accent: #58a6ff;
-    --accent2: #e3b341;
-    --green: #3fb950;
-    --red: #f85149;
-    --blue: #58a6ff;
-    --yellow: #e3b341;
-    --purple: #bc8cff;
-  }
-  html, body {
-    margin: 0; padding: 0; background: var(--bg); color: var(--text);
-    font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
-  }
-  header {
-    padding: 12px 16px; background: var(--panel); border-bottom: 1px solid #30363d;
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  header h1 { margin: 0; font-size: 18px; font-weight: 600; letter-spacing: .3px; }
-  header .meta { font-size: 12px; color: var(--muted); }
-  main { display: grid; grid-template-columns: 320px 1fr 360px; gap: 12px; padding: 12px; }
-  section, aside {
-    background: var(--panel); border: 1px solid #30363d; border-radius: 8px;
-    padding: 12px;
-  }
-  h2 { margin: 4px 0 8px; font-size: 14px; color: var(--accent); }
-  h3 { margin: 8px 0 8px; font-size: 13px; color: var(--muted); font-weight: 600; }
-  .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-  .col { display: flex; flex-direction: column; gap: 6px; }
-  label { font-size: 12px; color: var(--muted); }
-  select, button, input[type="range"] {
-    background: #0b0f14; color: var(--text); border: 1px solid #30363d; border-radius: 6px;
-    padding: 6px 8px; font-size: 13px;
-  }
-  button { cursor: pointer; transition: background .15s; }
-  button:hover { background: #0f141b; }
-  button:disabled { opacity: 0.5; cursor: not-allowed; }
-  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; border-radius: 999px; background: #0b0f14; border: 1px solid #30363d; font-size: 12px; }
-  .muted { color: var(--muted); }
-  .accent { color: var(--accent); }
-  .small { font-size: 12px; }
-  #pitchWrap { position: relative; }
-  #canvas { width: 100%; height: 520px; display: block; background: #1a232f; border-radius: 8px; }
-  #topbar {
-    display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8px;
-    padding: 8px; border: 1px dashed #30363d; border-radius: 8px; margin-bottom: 8px;
-  }
-  #score { font-weight: 700; text-align: center; letter-spacing: 1px; }
-  .bars { display: flex; gap: 8px; align-items: center; justify-content: flex-end; }
-  .bar { width: 120px; height: 10px; border-radius: 6px; background: #0b0f14; border: 1px solid #30363d; overflow: hidden; position: relative; }
-  .bar span { display: block; height: 100%; background: var(--green); width: 50%; }
-  .bar.momentum span { background: var(--purple); }
-  .tag { font-size: 10px; padding: 2px 6px; border: 1px solid #30363d; border-radius: 999px; color: var(--muted); }
-  #feed { height: 520px; overflow: auto; display: flex; flex-direction: column-reverse; gap: 8px; }
-  .line { padding: 8px; border: 1px solid #30363d; border-radius: 8px; background: #0b0f14; }
-  .line .who { font-weight: 600; color: var(--accent2); }
-  .line .work { color: var(--muted); font-size: 12px; }
-  .pill { padding: 2px 6px; border-radius: 6px; background: #0b0f14; border: 1px solid #30363d; font-size: 11px; color: var(--muted); }
-  .legend { display: flex; gap: 8px; flex-wrap: wrap; }
-  .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
-  .gDot { background: var(--yellow); }
-  .dDot { background: var(--blue); }
-  .ballDot { background: #fff; border: 1px solid #000; }
-  .sep { height: 1px; background: #30363d; margin: 8px 0; }
-  .hint { font-size: 12px; color: var(--muted); }
-  .btnrow { display: flex; gap: 8px; flex-wrap: wrap; }
-  .wide { width: 100%; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dialectic Strikers - Philosopher Football Manager</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #2c5530, #1a3a1e);
+            color: #f5f5f5;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .subtitle {
+            text-align: center;
+            font-style: italic;
+            margin-bottom: 30px;
+            color: #d4d4d4;
+        }
+        
+        .game-setup {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .team-selection {
+            flex: 1;
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #4a7c59;
+        }
+        
+        .team-header {
+            text-align: center;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            color: #8fbc8f;
+        }
+        
+        .player-card {
+            background: rgba(255,255,255,0.1);
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #8fbc8f;
+            transition: all 0.3s ease;
+        }
+        
+        .player-card:hover {
+            background: rgba(255,255,255,0.15);
+            transform: translateX(5px);
+        }
+        
+        .player-name {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+        
+        .player-role {
+            color: #b8d4b8;
+            font-style: italic;
+            margin-bottom: 8px;
+        }
+        
+        .player-stats {
+            display: flex;
+            gap: 15px;
+            font-size: 0.9em;
+        }
+        
+        .stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .stat-name {
+            color: #9fb89f;
+            font-size: 0.8em;
+        }
+        
+        .stat-value {
+            font-weight: bold;
+            color: #c8e6c9;
+        }
+        
+        .tactics-section {
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .tactics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .tactic-card {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .tactic-card:hover {
+            background: rgba(255,255,255,0.15);
+        }
+        
+        .tactic-card.selected {
+            border-color: #8fbc8f;
+            background: rgba(143,188,143,0.2);
+        }
+        
+        .start-match-btn {
+            display: block;
+            width: 200px;
+            margin: 20px auto;
+            padding: 15px;
+            background: linear-gradient(45deg, #4a7c59, #5d8c6a);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .start-match-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .match-screen {
+            display: none;
+        }
+        
+        .match-header {
+            background: rgba(0,0,0,0.4);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .score-display {
+            font-size: 3em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .match-time {
+            font-size: 1.5em;
+            color: #8fbc8f;
+        }
+        
+        .pitch-container {
+            background: linear-gradient(90deg, #2d5016, #4a7c2d);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            min-height: 400px;
+            position: relative;
+            border: 3px solid #6b8e23;
+        }
+        
+        .pitch-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+        }
+        
+        .center-line {
+            position: absolute;
+            top: 20px;
+            bottom: 20px;
+            left: 50%;
+            width: 2px;
+            background: rgba(255,255,255,0.6);
+        }
+        
+        .center-circle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100px;
+            height: 100px;
+            border: 2px solid rgba(255,255,255,0.6);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .player-dot {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            transition: all 0.5s ease;
+            border: 2px solid white;
+            z-index: 10;
+        }
+        
+        .player-dot.greek {
+            background: #4169e1;
+        }
+        
+        .player-dot.german {
+            background: #dc143c;
+        }
+        
+        .ball {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: white;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            z-index: 15;
+        }
+        
+        .commentary-feed {
+            background: rgba(0,0,0,0.4);
+            border-radius: 10px;
+            padding: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .commentary-line {
+            margin: 10px 0;
+            padding: 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
+            border-left: 3px solid #8fbc8f;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .commentary-line.goal {
+            border-left-color: #ffd700;
+            background: rgba(255,215,0,0.1);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .control-btn {
+            padding: 10px 20px;
+            background: rgba(74,124,89,0.8);
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .control-btn:hover {
+            background: rgba(74,124,89,1);
+        }
+        
+        .momentum-bars {
+            display: flex;
+            gap: 20px;
+            margin: 15px 0;
+            justify-content: center;
+        }
+        
+        .momentum-bar {
+            text-align: center;
+        }
+        
+        .momentum-fill {
+            width: 200px;
+            height: 10px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .momentum-progress {
+            height: 100%;
+            transition: width 0.5s ease;
+            background: linear-gradient(90deg, #4169e1, #8fbc8f, #dc143c);
+        }
+    </style>
 </head>
 <body>
-<header>
-  <h1>Dialectic Strikers: Greeks vs. Germans</h1>
-  <div class="meta">Small-sided 5v5. Every pass is an argument. Every goal, a thesis defended.</div>
-</header>
-
-<main>
-  <section id="pre">
-    <h2>Pre-match setup</h2>
-    <div class="grid">
-      <div class="col">
-        <label>Your side</label>
-        <select id="side">
-          <option value="Greek">Ancient Greek</option>
-          <option value="German">Classical German</option>
-        </select>
-      </div>
-      <div class="col">
-        <label>Match length (minutes)</label>
-        <select id="minutes">
-          <option>6</option>
-          <option selected>8</option>
-          <option>10</option>
-        </select>
-      </div>
-      <div class="col">
-        <label>Your tactic</label>
-        <select id="tacticA"></select>
-      </div>
-      <div class="col">
-        <label>Opponent tactic</label>
-        <select id="tacticB"></select>
-      </div>
-      <div class="col">
-        <label>Sim speed</label>
-        <input id="speed" type="range" min="1" max="8" step="1" value="6" />
-        <div class="hint">Higher is faster. Default ~6× real time.</div>
-      </div>
-      <div class="col">
-        <label>Focus slider (Idealism ↔ Empiricism)</label>
-        <input id="focus" type="range" min="-1" max="1" step="0.1" value="0" />
-        <div class="hint">Tilt creative vision (Idealism) or sharp reads (Empiricism).</div>
-      </div>
-    </div>
-    <div class="sep"></div>
-    <div class="btnrow">
-      <button id="start">Kick off</button>
-      <button id="randomize">Randomize tactics</button>
-    </div>
-    <div class="sep"></div>
-    <div>
-      <h3>Rosters</h3>
-      <div class="grid">
-        <div>
-          <div class="badge"><span class="dot gDot"></span>Ancient Greek</div>
-          <ul class="small">
-            <li>Socrates — Rhetoric, Elenchus.</li>
-            <li>Plato — Idealism, Allegory of the Cave.</li>
-            <li>Aristotle — Empiricism, Golden Mean.</li>
-            <li>Heraclitus — Will, Everything Flows.</li>
-            <li>Diogenes — Rhetoric, Barrel Life.</li>
-          </ul>
+    <div class="container">
+        <h1>⚽ Dialectic Strikers - Philosopher Football Manager ⚽</h1>
+        <p class="subtitle">"Where every tackle doubles as a jab at a grand theory"</p>
+        
+        <div id="setup-screen">
+            <div class="game-setup">
+                <div class="team-selection">
+                    <h3 class="team-header">🏛️ Ancient Greeks</h3>
+                    <div id="greek-team"></div>
+                </div>
+                
+                <div class="team-selection">
+                    <h3 class="team-header">🎭 Classical Germans</h3>
+                    <div id="german-team"></div>
+                </div>
+            </div>
+            
+            <div class="tactics-section">
+                <h3>Choose Your Tactical Philosophy</h3>
+                <div class="tactics-grid" id="tactics-grid"></div>
+            </div>
+            
+            <button class="start-match-btn" onclick="startMatch()">Begin the Philosophical Clash!</button>
         </div>
-        <div>
-          <div class="badge"><span class="dot dDot"></span>Classical German</div>
-          <ul class="small">
-            <li>Kant — Idealism, Categorical Imperative.</li>
-            <li>Hegel — Dialectic, Absolute Spirit.</li>
-            <li>Schopenhauer — Will, Pessimist’s Edge.</li>
-            <li>Nietzsche — Will, Eternal Recurrence.</li>
-            <li>Fichte — Idealism, I-hood Rush.</li>
-          </ul>
+        
+        <div id="match-screen" class="match-screen">
+            <div class="match-header">
+                <div class="match-time" id="match-time">00:00</div>
+                <div class="score-display">
+                    <span id="greek-score">0</span> - <span id="german-score">0</span>
+                </div>
+                <div style="font-size: 1.2em; margin-top: 10px;">
+                    Ancient Greeks vs Classical Germans
+                </div>
+                
+                <div class="momentum-bars">
+                    <div class="momentum-bar">
+                        <div>Greek Momentum</div>
+                        <div class="momentum-fill">
+                            <div class="momentum-progress" id="greek-momentum" style="width: 50%"></div>
+                        </div>
+                    </div>
+                    <div class="momentum-bar">
+                        <div>German Momentum</div>
+                        <div class="momentum-fill">
+                            <div class="momentum-progress" id="german-momentum" style="width: 50%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="pitch-container" id="pitch">
+                <div class="pitch-lines">
+                    <div class="center-line"></div>
+                    <div class="center-circle"></div>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <button class="control-btn" onclick="pauseMatch()">⏸️ Pause</button>
+                <button class="control-btn" onclick="adjustSpeed()">⏩ Speed: <span id="speed-display">1x</span></button>
+                <button class="control-btn" onclick="adjustTactic('defensive')">🛡️ Defensive</button>
+                <button class="control-btn" onclick="adjustTactic('attacking')">⚔️ Attacking</button>
+                <button class="control-btn" onclick="adjustTactic('counter')">🏃 Counter</button>
+            </div>
+            
+            <div class="commentary-feed" id="commentary"></div>
+            
+            <button class="start-match-btn" onclick="resetGame()" style="margin-top: 20px;">New Match</button>
         </div>
-      </div>
     </div>
-  </section>
-
-  <section id="match" style="display:none;">
-    <div id="topbar">
-      <div class="legend">
-        <span class="badge"><span class="dot ballDot"></span>Ball</span>
-        <span class="badge"><span class="dot gDot"></span>Greek</span>
-        <span class="badge"><span class="dot dDot"></span>German</span>
-        <span class="pill" id="tacticName">Tactic: —</span>
-      </div>
-      <div id="score">00:00 — 0 : 0 — 08:00</div>
-      <div class="bars">
-        <span class="tag">Morale</span>
-        <div class="bar" title="Greek morale">
-          <span id="moraleA" style="width:50%"></span>
-        </div>
-        <div class="bar" title="German morale">
-          <span id="moraleB" style="width:50%"></span>
-        </div>
-        <span class="tag">Momentum</span>
-        <div class="bar momentum" title="Greek momentum">
-          <span id="momA" style="width:50%"></span>
-        </div>
-        <div class="bar momentum" title="German momentum">
-          <span id="momB" style="width:50%"></span>
-        </div>
-      </div>
-    </div>
-    <div id="pitchWrap">
-      <canvas id="canvas" width="980" height="520"></canvas>
-    </div>
-    <div class="sep"></div>
-    <div class="btnrow">
-      <button id="pause">Pause</button>
-      <button id="resume" disabled>Resume</button>
-      <button id="switchTactic">Switch tactic</button>
-      <button id="timeWaste">Time-waste</button>
-      <button id="reset">Reset</button>
-      <span class="pill">“Dead Parrot VAR” may appear once per match.</span>
-    </div>
-  </section>
-
-  <aside>
-    <h2>Commentary</h2>
-    <div id="feed"></div>
-  </aside>
-</main>
-
-<script>
-/* === Core data: philosophers, stats, traits, tactics, commentary === */
-
-const ROLES = {
-  "Socrates": { team:"Greek", role:"Midfield interrogator", works:["Apology","Crito"], sig:"Rhetoric", weak:"Shooting", traits:["elenchus"] },
-  "Plato": { team:"Greek", role:"Playmaking idealist", works:["Republic","Symposium"], sig:"Idealism", weak:"Empiricism", traits:["cave"] },
-  "Aristotle": { team:"Greek", role:"Holding regista", works:["Nicomachean Ethics","Physics"], sig:"Empiricism", weak:"Flair", traits:["goldenMean"] },
-  "Heraclitus": { team:"Greek", role:"Drifting winger", works:["Fragments"], sig:"Will", weak:"Consistency", traits:["flows"] },
-  "Diogenes": { team:"Greek", role:"Pressing forward", works:["Anecdotes"], sig:"Rhetoric", weak:"Cohesion", traits:["barrel"] },
-  "Kant": { team:"German", role:"Deep-lying organizer", works:["Critique of Pure Reason"], sig:"Idealism", weak:"Pace", traits:["categorical"] },
-  "Hegel": { team:"German", role:"Box-to-box dialectician", works:["Phenomenology of Spirit"], sig:"Dialectic", weak:"Risk", traits:["spirit"] },
-  "Schopenhauer": { team:"German", role:"Defensive destroyer", works:["The World as Will..."], sig:"Will", weak:"Morale", traits:["pessimist"] },
-  "Nietzsche": { team:"German", role:"Poacher of meaning", works:["Thus Spoke Zarathustra"], sig:"Will", weak:"Passes", traits:["recurrence"] },
-  "Fichte": { team:"German", role:"Energetic presser", works:["Wissenschaftslehre"], sig:"Idealism", weak:"Finishing", traits:["ihood"] },
-};
-
-// Base stat sheet (philosophy-first)
-const BASE = { Dialectic:60, Idealism:60, Empiricism:60, Rhetoric:60, Will:60 };
-function withSignatureWeakness(name) {
-  const meta = ROLES[name];
-  let s = {...BASE};
-  // Signature stat bump
-  if (meta.sig && s[meta.sig] !== undefined) s[meta.sig] = Math.min(96, s[meta.sig] + 22);
-  // Weakness mapping to core stats
-  const weakMap = {
-    "Shooting":"Idealism", "Empiricism":"Empiricism", "Flair":"Rhetoric",
-    "Consistency":null, "Cohesion":null, "Pace":null, "Risk":null,
-    "Morale":null, "Passes":"Dialectic", "Finishing":"Will"
-  };
-  const w = weakMap[meta.weak] || null;
-  if (w && s[w] !== undefined) s[w] = Math.max(34, s[w] - 16);
-  // Non-core weaknesses affect derived props; handled later
-  return s;
-}
-
-// Traits numeric hooks
-const TRAITS = {
-  elenchus: { stunMs: 600, chance: 0.28 },
-  cave: { longRiskVar: 1.4, longReward: 1.2 },
-  goldenMean: { varianceShrink: 0.75, teamConsistency: 0.05 },
-  flows: { burstEvery: 4500, burstMs: 1300, speedBoost: 1.35, dribbleBuff: 0.12 },
-  barrel: { pressMoraleShock: 0.03, shamelessPress: 0.08 },
-  categorical: { holdShape: 0.12, lineDiscipline: 0.15 },
-  spirit: { chainBoost: 0.06, decay: 0.995 },
-  pessimist: { interceptBonus: 0.15, errorDrain: 0.04 },
-  recurrence: { missBuff: 0.18, buffMs: 2500 },
-  ihood: { duelPressBoost: 0.2, ms: 2000 },
-};
-
-// Tactics presets
-const TACTICS = {
-  "Platonic Ideal Counter": {
-    key:"ideal_counter", depth: 0.75, width: 0.6, press: 0.4, risk: 0.6,
-    emphasis: { Idealism: 0.15, Dialectic: 0.05 }, shape: 0.05, longBias: 0.25, overload: null
-  },
-  "Categorical Press": {
-    key:"categorical_press", depth: 0.35, width: 0.7, press: 0.9, risk: 0.45,
-    emphasis: { Rhetoric: 0.08, Will: 0.08, Idealism: 0.05 }, shape: 0.22, longBias: 0.1, overload: null
-  },
-  "Barrel Blitz": {
-    key:"barrel_blitz", depth: 0.3, width: 0.85, press: 1.0, risk: 0.75,
-    emphasis: { Rhetoric: 0.12, Will: 0.12 }, shape: -0.05, longBias: 0.1, overload: null
-  },
-  "Golden Mean Midblock": {
-    key:"golden_mean", depth: 0.5, width: 0.65, press: 0.6, risk: 0.5,
-    emphasis: { Dialectic: 0.05, Empiricism: 0.05 }, shape: 0.1, longBias: 0.12, overload: null
-  },
-  "Dialectical Overload (left)": {
-    key:"dial_overload_L", depth: 0.55, width: 0.75, press: 0.7, risk: 0.58,
-    emphasis: { Dialectic: 0.12, Idealism: 0.06 }, shape: 0.08, longBias: 0.18, overload: "L"
-  },
-  "Dialectical Overload (right)": {
-    key:"dial_overload_R", depth: 0.55, width: 0.75, press: 0.7, risk: 0.58,
-    emphasis: { Dialectic: 0.12, Idealism: 0.06 }, shape: 0.08, longBias: 0.18, overload: "R"
-  },
-};
-
-// Commentary lines
-const LINES = {
-  Socrates: {
-    pass_success: [
-      "Socrates performs an elenchus—question by question, the defense admits the pass.",
-    ],
-    tackle_win: [
-      "Objection sustained! A cross-examination ends with the ball pleading guilty.",
-    ],
-    foul: [ "The Apology won’t help you there, old friend." ],
-  },
-  Plato: {
-    through: [
-      "From the cave to the sun—Plato finds the Form of the perfect pass.",
-    ],
-    miss: [ "Alas, only a shadow of a goal appears on the wall." ],
-    assist: [ "The Republic approves: justice served, striker liberated." ],
-  },
-  Aristotle: {
-    intercept: [
-      "Empirical observation: the ball goes here. Conclusion: mine.",
-    ],
-    balance: [
-      "The Golden Mean—neither hoofed nor overcooked.",
-    ],
-  },
-  Heraclitus: {
-    dribble: [
-      "You never dribble the same defender twice—he flows right past.",
-    ],
-    momentum: [
-      "Flux favors the bold!",
-    ],
-  },
-  Diogenes: {
-    press_win: [
-      "Diogenes leaves his barrel to dispossess the unsuspecting.",
-    ],
-    taunt: [
-      "He’s searching for an honest defender. No luck.",
-    ],
-  },
-  Kant: {
-    shape: [
-      "By categorical imperative, the back line keeps its duty.",
-    ],
-    long: [
-      "Synthetic a priori: the pass was true before it was struck.",
-    ],
-  },
-  Hegel: {
-    combo: [ "Thesis, antithesis… synthesis! A one-two becomes a higher unity." ],
-    turnover: [ "Dialectic goes dialect-wrong." ],
-  },
-  Schopenhauer: {
-    intercept: [ "Will triumphs, representation stumbles." ],
-    groan: [ "The world is pain—especially that first touch." ],
-  },
-  Nietzsche: {
-    goal: [ "Behold the Über-striker! A will-to-power finish." ],
-    miss: [ "If you stare into the keeper, the keeper stares back." ],
-  },
-  Fichte: {
-    press: [ "The I asserts itself—possession redefined." ],
-  },
-  Generic: {
-    goal: [ "Goal! An argument emphatically settled.", "A thesis lands in the net—how persuasive." ],
-    save: [ "Counter-argument! The keeper (metaphorical) parries the claim." ],
-    var: [ "Dead Parrot VAR says: it's not pining, it's disallowed!", "VAR: This argument has ceased to be." ],
-    sketch: [ "And now for something completely transcendent…" ],
-  }
-};
-
-const TEAM_COLORS = { Greek: "#e3b341", German: "#58a6ff" };
-
-/* === UI wiring === */
-const el = (id) => document.getElementById(id);
-const sideSel = el("side");
-const minutesSel = el("minutes");
-const tacticA = el("tacticA");
-const tacticB = el("tacticB");
-const speedRange = el("speed");
-const focusRange = el("focus");
-const btnStart = el("start");
-const btnRandom = el("randomize");
-const btnPause = el("pause");
-const btnResume = el("resume");
-const btnSwitch = el("switchTactic");
-const btnWaste = el("timeWaste");
-const btnReset = el("reset");
-const feed = el("feed");
-const scoreEl = el("score");
-const moraleAEl = el("moraleA");
-const moraleBEl = el("moraleB");
-const momAEl = el("momA");
-const momBEl = el("momB");
-const tacticNameEl = el("tacticName");
-const pre = el("pre");
-const match = el("match");
-const canvas = el("canvas");
-const ctx = canvas.getContext("2d");
-
-for (const t of Object.keys(TACTICS)) {
-  const opt1 = document.createElement("option");
-  opt1.value = t; opt1.textContent = t; tacticA.appendChild(opt1);
-  const opt2 = document.createElement("option");
-  opt2.value = t; opt2.textContent = t; tacticB.appendChild(opt2);
-}
-tacticA.value = "Golden Mean Midblock";
-tacticB.value = "Categorical Press";
-
-btnRandom.onclick = () => {
-  const keys = Object.keys(TACTICS);
-  tacticA.value = keys[(Math.random()*keys.length)|0];
-  tacticB.value = keys[(Math.random()*keys.length)|0];
-};
-
-let engine = null;
-
-/* === Engine state === */
-function makePlayer(name, idx, side, x, y) {
-  const stats = withSignatureWeakness(name);
-  const meta = ROLES[name];
-  // Derived properties
-  const pacePenalty = (meta.weak === "Pace") ? 0.85 : 1.0;
-  const passPenalty = (meta.weak === "Passes") ? 0.9 : 1.0;
-  const finishPenalty = (meta.weak === "Finishing") ? 0.92 : 1.0;
-
-  return {
-    id: `${side}-${idx}`, name, team: side, idx,
-    x, y, vx:0, vy:0, speed: 0.075 * pacePenalty, radius: 9,
-    stats, stamina: 1.0, morale: 0.5, hasBall: false,
-    target: null, stunnedUntil: 0, cooldowns: {},
-    recentFailAt: 0, burstUntil: 0,
-    trait: ROLES[name].traits || [],
-    passPenalty, finishPenalty,
-    lastDuelWinAt: 0,
-  };
-}
-
-function teamLineup(side, W, H) {
-  // 2-2-1 simple layout, mirrored by side
-  const left = side === "Greek";
-  const xBase = left ? 120 : W-120;
-  const dir = left ? 1 : -1;
-  return [
-    {x: xBase, y: H*0.25},
-    {x: xBase, y: H*0.75},
-    {x: xBase + 140*dir, y: H*0.35},
-    {x: xBase + 140*dir, y: H*0.65},
-    {x: xBase + 260*dir, y: H*0.5},
-  ];
-}
-
-function createMatchState(opts) {
-  const W = canvas.width, H = canvas.height;
-  const leftSide = opts.playerSide === "Greek" ? "Greek" : "German";
-  const rightSide = leftSide === "Greek" ? "German" : "Greek";
-  const greekNames = ["Socrates","Plato","Aristotle","Heraclitus","Diogenes"];
-  const germanNames = ["Kant","Hegel","Schopenhauer","Nietzsche","Fichte"];
-  const leftNames = (leftSide === "Greek") ? greekNames : germanNames;
-  const rightNames = (rightSide === "German") ? germanNames : greekNames;
-
-  const leftPos = teamLineup(leftSide, W, H);
-  const rightPos = teamLineup(rightSide, W, H);
-
-  const left = leftNames.map((n,i)=>makePlayer(n,i,leftSide,leftPos[i].x,leftPos[i].y));
-  const right = rightNames.map((n,i)=>makePlayer(n,i,rightSide,rightPos[i].x,rightPos[i].y));
-
-  // Kickoff holder: central attacker
-  const kickoffLeft = left[4]; kickoffLeft.hasBall = true;
-
-  return {
-    W, H,
-    teams: {
-      left: { side:leftSide, players:left, score:0, morale:0.5, momentum:0.5, tactic: TACTICS[opts.tacticLeft], focus: opts.focus },
-      right:{ side:rightSide, players:right, score:0, morale:0.5, momentum:0.5, tactic: TACTICS[opts.tacticRight], focus: -opts.focus },
-    },
-    ball: { x: kickoffLeft.x, y: kickoffLeft.y, vx:0, vy:0, lastTouch: kickoffLeft, speed:0.28 },
-    time: 0, // ms
-    lengthMs: opts.lengthMin * 60000,
-    running: false, paused: false, speed: opts.speed,
-    varUsed: false,
-  };
-}
-
-/* === Utility === */
-function clamp(v, a, b){ return Math.max(a, Math.min(b, v)); }
-function dist(a,b,c,d){ const dx=a-c, dy=b-d; return Math.hypot(dx,dy); }
-function lerp(a,b,t){ return a+(b-a)*t; }
-function nrand(){ // approx normal via CLT
-  let s=0; for(let i=0;i<6;i++) s+=Math.random(); return (s-3)/3;
-}
-
-/* === Decision and resolution === */
-function selectIntent(p, world, teamObj, oppObj, now) {
-  const { ball } = world;
-  const withBall = p.hasBall;
-  const tactic = teamObj.tactic;
-  const allies = teamObj.players;
-  const opp = oppObj.players;
-
-  // Trait bursts
-  if (p.trait.includes("flows")) {
-    if (now > (p.cooldowns.flowBurst||0)) {
-      p.burstUntil = now + TRAITS.flows.burstMs;
-      p.cooldowns.flowBurst = now + TRAITS.flows.burstEvery;
-    }
-  }
-
-  if (p.stunnedUntil && now < p.stunnedUntil) {
-    return { type:"stunned" };
-  }
-
-  // Keep or find shape position
-  const basePos = teamObj.basePositions?.[p.idx];
-  if (basePos && !withBall) {
-    // Shape discipline boost (Kant, tactic shape)
-    const shapePull = (teamHasTrait(teamObj,"categorical")? TRAITS.categorical.holdShape:0) + (tactic.shape||0);
-    const dx = basePos.x - p.x, dy = basePos.y - p.y;
-    p.vx += dx * 0.0005 * shapePull;
-    p.vy += dy * 0.0005 * shapePull;
-  }
-
-  // If very close to ball and not in possession: press/tackle
-  const ballOwner = getBallOwner(world);
-  if (!withBall) {
-    const target = ballOwner || nearestTo(ball.x, ball.y, opp);
-    const d = dist(p.x,p.y,target.x,target.y);
-    const pressFactor = tactic.press + (teamObj.focus<0?0.05:0) + (p.trait.includes("barrel")?TRAITS.barrel.shamelessPress:0);
-    if (d < 46 + 30*(1-pressFactor)) {
-      // Attempt tackle if owner is within radius
-      if (ballOwner && d < p.radius+10) {
-        return { type:"tackle", target: ballOwner };
-      } else {
-        return { type:"press", target };
-      }
-    }
-    // Intercept line
-    if (ball.vx || ball.vy) {
-      return { type:"intercept", target: { x: ball.x+ball.vx*10, y: ball.y+ball.vy*10 } };
-    }
-    // Move towards lanes
-    return { type:"move", target: ballOwner ? {x:ballOwner.x, y:ballOwner.y} : {x:ball.x, y:ball.y} };
-  }
-
-  // With ball: decide among pass, dribble, shoot
-  const towardsGoalX = (teamObj.side==="Greek")? world.W-20 : 20;
-  const goalDist = dist(p.x,p.y,towardsGoalX, world.H/2);
-
-  // Baselines influenced by stats and tactic
-  const s = p.stats;
-  const emp = s.Empiricism/100, dia = s.Dialectic/100, ide = s.Idealism/100, rhe = s.Rhetoric/100, wil = s.Will/100;
-  const focusIde = clamp(teamObj.focus*0.2, -0.2, 0.2);
-  const passShortWeight = clamp((dia+emp)/2 + 0.1, 0, 1);
-  const passLongWeight  = clamp((dia+ide)/2 + (tactic.longBias||0) + focusIde, 0, 1);
-  const dribbleWeight   = clamp((rhe+wil)/2 + (p.burstUntil>now? TRAITS.flows.dribbleBuff:0), 0, 1);
-  const shootWeight     = clamp((wil+ide)/2 * (goalDist<180?1.0:goalDist<260?0.7:0.4), 0, 1);
-
-  // Overload focus tilts dribble/combo to a flank
-  const weights = [
-    {k:"shoot", w: shootWeight*1.0 },
-    {k:"dribble", w: dribbleWeight * (goalDist<160?0.9:1.0) },
-    {k:"pass_long", w: passLongWeight },
-    {k:"pass_short", w: passShortWeight }
-  ].sort((a,b)=>b.w-a.w);
-
-  // Stochastic choice
-  const sum = weights.reduce((a,c)=>a+c.w,0) || 1;
-  let r = Math.random()*sum;
-  for (const w of weights) {
-    if ((r-=w.w)<=0) {
-      if (w.k.startsWith("pass")) {
-        // choose target ally
-        const options = allies.filter(q=>q!==p);
-        // Through-ball bias: seek forward teammate
-        const dir = (teamObj.side==="Greek")?1:-1;
-        const forward = options.filter(q=> (q.x - p.x)*dir > 0 );
-        const pool = (w.k==="pass_long" && forward.length)?forward:options;
-        const rec = pool[(Math.random()*pool.length)|0];
-        return { type:w.k, target: rec };
-      }
-      return { type:w.k };
-    }
-  }
-  return { type:"dribble" };
-}
-
-function teamHasTrait(team, key){
-  return team.players.some(p=>p.trait.includes(key));
-}
-
-function nearestTo(x,y, arr){
-  let best=arr[0], bd=1e9;
-  for (const p of arr){ const d=dist(x,y,p.x,p.y); if (d<bd){bd=d; best=p;} }
-  return best;
-}
-
-function getBallOwner(world){
-  const both = world.teams.left.players.concat(world.teams.right.players);
-  return both.find(p=>p.hasBall) || null;
-}
-
-function resolveIntent(p, intent, world, teamObj, oppObj, now, log){
-  const ball = world.ball;
-  const opp = oppObj.players;
-
-  function addLine(who, type, text, work){
-    log.push({ who, type, text, work, ts: now });
-  }
-
-  if (intent.type==="stunned") return;
-
-  // Movement
-  const speed = p.speed * (p.burstUntil>now ? TRAITS.flows.speedBoost : 1.0) * (0.6 + 0.4*p.stamina);
-  const shapeDisc = (teamHasTrait(teamObj,"categorical") ? (1+TRAITS.categorical.lineDiscipline*0.5) : 1);
-
-  // Actions
-  if (intent.type==="move" || intent.type==="press" || intent.type==="intercept") {
-    const t = intent.target;
-    const dx = t.x - p.x, dy = t.y - p.y;
-    const d = Math.hypot(dx,dy)||1;
-    const k = (intent.type==="press")? 1.15 : 1.0;
-    p.vx += (dx/d) * speed * 0.6 * k;
-    p.vy += (dy/d) * speed * 0.6 * k;
-    return;
-  }
-
-  if (intent.type==="tackle") {
-    // tackle success chance: Empiricism + Will vs holder's Rhetoric + Will
-    const holder = intent.target;
-    const atk = (p.stats.Empiricism + p.stats.Will)/200;
-    const def = (holder.stats.Rhetoric + holder.stats.Will)/200;
-    let prob = clamp(0.45 + (atk-def) * 0.55, 0.1, 0.9);
-    if (teamObj.tactic.press>0.8) prob += 0.03;
-    if (p.trait.includes("pessimist")) prob += TRAITS.pessimist.interceptBonus*0.5;
-    if (Math.random() < prob) {
-      // Win tackle
-      if (holder.hasBall) holder.hasBall = false;
-      p.hasBall = true; world.ball.lastTouch = p; world.ball.x = p.x; world.ball.y = p.y;
-      // Elenchus stun
-      if (p.trait.includes("elenchus") && Math.random()<TRAITS.elenchus.chance) {
-        holder.stunnedUntil = now + TRAITS.elenchus.stunMs;
-        addLine(p.name, "tackle_win", "Objection sustained! A cross-examination ends with the ball pleading guilty.", workOf(p.name));
-      } else {
-        addLine(p.name, "tackle_win", pickLine(p.name,"tackle_win") || "Wins it back with a tidy challenge.", workOf(p.name));
-      }
-      // Diogenes morale shock
-      if (p.trait.includes("barrel")) {
-        oppObj.morale = clamp(oppObj.morale - TRAITS.barrel.pressMoraleShock, 0, 1);
-        addLine("Diogenes", "taunt", LINES.Diogenes.taunt[0], "Anecdotes");
-      }
-    } else {
-      // Foul-ish miss or dribbled
-      if (Math.random() < 0.25) addLine(p.name, "foul", pickLine(p.name,"foul") || "Foul given. Not very dialectical.", workOf(p.name));
-      // If Schopenhauer error drains morale
-      if (p.trait.includes("pessimist")) teamObj.morale = clamp(teamObj.morale - TRAITS.pessimist.errorDrain, 0, 1);
-    }
-    return;
-  }
-
-  if (intent.type.startsWith("pass")) {
-    const rec = intent.target;
-    const long = (intent.type==="pass_long");
-    const s = p.stats, r = rec.stats;
-    const dia = (s.Dialectic + r.Dialectic)/200;
-    const emp = (s.Empiricism + r.Empiricism)/200;
-    const ide = (s.Idealism + r.Idealism)/200;
-    let base = long ? (0.42 + 0.6*(dia*0.6 + ide*0.4)) : (0.64 + 0.5*(dia*0.6 + emp*0.4));
-    base *= p.passPenalty;
-    // Tactic modifiers
-    base += (teamObj.tactic.emphasis?.Dialectic||0) * 0.2;
-    base += (teamObj.tactic.emphasis?.Idealism||0) * 0.15 * (long?1:0.4);
-    // Plato's cave: higher variance
-    if (p.trait.includes("cave") && long) {
-      const varMul = TRAITS.cave.longRiskVar;
-      const reward = TRAITS.cave.longReward;
-      const jitter = nrand()*0.1*varMul;
-      base = clamp(base*reward + jitter, 0.05, 0.95);
-    } else {
-      // Golden Mean reduces variance team-wide if Aristotle present
-      if (teamHasTrait(teamObj,"goldenMean")) base = lerp(0.5, base, TRAITS.goldenMean.varianceShrink);
-      // Hegel momentum
-      base += (teamObj.momentum - 0.5) * (teamHasTrait(teamObj,"spirit")? TRAITS.spirit.chainBoost : 0.04);
-    }
-    // Opp pressure
-    const nearestOpp = nearestTo(rec.x, rec.y, opp);
-    const oppPress = clamp(0.06 + (1 - nearestOpp.stats.Empiricism/100)*0.1, 0, 0.12);
-    base -= oppPress;
-
-    const ok = Math.random() < base;
-    if (ok) {
-      // Transfer ball towards receiver smoothly
-      p.hasBall = false; world.ball.lastTouch = rec;
-      const steps = long ? 22 : 12;
-      world.ball.vx = (rec.x - p.x)/steps;
-      world.ball.vy = (rec.y - p.y)/steps;
-      world.ball.x = p.x; world.ball.y = p.y;
-      rec.pendingReceiveAt = performance.now() + steps* (50/ (engine?.speed||6)); // approx
-      rec.willReceiveFrom = p;
-      // Commentary
-      if (long) {
-        if (p.name==="Plato") pushCommentConditional(p.name, "through", LINES.Plato.through[0], workOf(p.name));
-        else if (p.name==="Kant") pushCommentConditional(p.name, "long", LINES.Kant.long[0], workOf(p.name));
-        else pushCommentConditional(p.name, "pass_success", `${p.name} finds ${rec.name} with a visionary ball.`, workOf(p.name));
-      } else {
-        if (p.name==="Socrates") pushCommentConditional(p.name, "pass_success", LINES.Socrates.pass_success[0], workOf(p.name));
-        else if (teamHasTrait(teamObj,"goldenMean")) pushCommentConditional("Aristotle", "balance", LINES.Aristotle.balance[0], "Nicomachean Ethics");
-        else pushCommentConditional(p.name, "pass_success", `${p.name} combines with ${rec.name}. Dialectic in motion.`, workOf(p.name));
-      }
-      // Momentum gain
-      teamObj.momentum = clamp(teamObj.momentum + 0.02, 0, 1);
-    } else {
-      // Interception chance
-      const interceptor = nearestTo((p.x+rec.x)/2, (p.y+rec.y)/2, opp);
-      const interProb = clamp(interceptor.stats.Empiricism/100 * 0.5 + 0.2, 0.05, 0.8);
-      if (Math.random() < interProb) {
-        interceptor.hasBall = true; world.ball.lastTouch = interceptor; world.ball.x = interceptor.x; world.ball.y = interceptor.y; world.ball.vx = 0; world.ball.vy = 0;
-        pushCommentConditional(interceptor.name, "intercept", pickLine(interceptor.name,"intercept") || `${interceptor.name} reads it early.`, workOf(interceptor.name));
-        // Schopenhauer bonus
-        if (interceptor.trait.includes("pessimist")) teamObj.morale = clamp(teamObj.morale - TRAITS.pessimist.errorDrain, 0, 1);
-      } else {
-        // Out of play? Lose ball near receiver
-        world.ball.x = rec.x; world.ball.y = rec.y; world.ball.vx = world.ball.vy = 0;
-      }
-      // Momentum loss
-      teamObj.momentum = clamp(teamObj.momentum - 0.03, 0, 1);
-    }
-    p.stamina = clamp(p.stamina - 0.005, 0, 1);
-    return;
-  }
-
-  if (intent.type==="dribble") {
-    // Success: Rhetoric + Will vs nearest opponent Empiricism + Will
-    const defender = nearestTo(p.x,p.y, opp);
-    const atk = (p.stats.Rhetoric + p.stats.Will)/200 + (p.burstUntil>now?0.08:0);
-    const def = (defender.stats.Empiricism + defender.stats.Will)/200;
-    let prob = clamp(0.55 + (atk-def)*0.5, 0.2, 0.9);
-    prob += (teamObj.tactic.risk-0.5) * 0.1;
-    if (Math.random() < prob) {
-      // Advance toward goal
-      const dir = (teamObj.side==="Greek")?1:-1;
-      p.vx += speed * (0.8 + Math.random()*0.3) * dir;
-      p.vy += (Math.random()-0.5) * speed * 0.8;
-      pushCommentConditional(p.name, "dribble", pickLine(p.name,"dribble") || `${p.name} glides past his man.`, workOf(p.name));
-      teamObj.momentum = clamp(teamObj.momentum + 0.02, 0, 1);
-    } else {
-      // Dispossessed
-      p.hasBall = false; defender.hasBall = true; world.ball.lastTouch = defender; world.ball.x = defender.x; world.ball.y = defender.y;
-      if (p.name==="Hegel") pushCommentConditional("Hegel", "turnover", LINES.Hegel.turnover[0], "Phenomenology of Spirit");
-      else pushCommentConditional(defender.name, "tackle_win", `${defender.name} wins the duel.`, workOf(defender.name));
-      // Fichte duel press buff
-      if (defender.trait.includes("ihood")) defender.lastDuelWinAt = now;
-      // Schopenhauer drain on your mistake
-      if (teamHasTrait(teamObj,"pessimist")) teamObj.morale = clamp(teamObj.morale - 0.02, 0, 1);
-      teamObj.momentum = clamp(teamObj.momentum - 0.03, 0, 1);
-    }
-    p.stamina = clamp(p.stamina - 0.008, 0, 1);
-    return;
-  }
-
-  if (intent.type==="shoot") {
-    // Chance from distance + Will + Idealism vs abstract keeper baseline and pressure
-    const goalX = (teamObj.side==="Greek")? world.W-12 : 12;
-    const goalY = world.H/2;
-    const d = dist(p.x,p.y, goalX, goalY);
-    const press = nearestTo(p.x,p.y, opp);
-    const pressVal = clamp(((press.stats.Empiricism + press.stats.Will)/200)*0.3, 0, 0.3);
-    const fin = ((p.stats.Will + p.stats.Idealism)/200) * p.finishPenalty;
-    let base = clamp(0.72*fin - (d/500) - pressVal + 0.15, 0.05, 0.7);
-    base += (teamObj.momentum-0.5)*0.1;
-    const ok = Math.random() < base;
-    if (ok) {
-      // Goal!
-      const tLeft = world.teams.left.side === teamObj.side ? world.teams.left : world.teams.right;
-      tLeft.score++;
-      pushComment(p.name, "goal", pickLine(p.name,"goal") || LINES.Generic.goal[(Math.random()*LINES.Generic.goal.length)|0], workOf(p.name));
-      // Nietzsche buff on miss; on goal, give Hegel chain
-      if (teamHasTrait(teamObj,"spirit")) teamObj.momentum = clamp(teamObj.momentum + 0.12, 0, 1);
-      // Reset for kickoff
-      kickoff(world, oppObj.side);
-    } else {
-      pushComment(p.name, "miss", pickLine(p.name,"miss") || LINES.Generic.save[(Math.random()*LINES.Generic.save.length)|0], workOf(p.name));
-      // Nietzsche buff on miss
-      const mate = teamObj.players.find(pl=>pl.name==="Nietzsche");
-      if (mate) mate.recentFailAt = now;
-      teamObj.momentum = clamp(teamObj.momentum - 0.02, 0, 1);
-      // Rare VAR gag once
-      if (!world.varUsed && Math.random()<0.07) {
-        world.varUsed = true;
-        pushComment("VAR", "var", LINES.Generic.var[(Math.random()*LINES.Generic.var.length)|0], null);
-      }
-    }
-    p.stamina = clamp(p.stamina - 0.01, 0, 1);
-    return;
-  }
-}
-
-function pickLine(name, key){
-  const pool = LINES[name]?.[key];
-  if (!pool || !pool.length) return null;
-  return pool[(Math.random()*pool.length)|0];
-}
-function workOf(name){
-  const w = ROLES[name]?.works;
-  return w ? w[0] : null;
-}
-function pushComment(who, type, text, work){
-  feed.insertAdjacentHTML("afterbegin",
-    `<div class="line"><div><span class="who">${who}</span> — ${text}</div>${work?`<div class="work">${work}</div>`:""}</div>`
-  );
-}
-
-function pushCommentConditional(who, type, text, work) {
-  if (type === "goal") {
-    pushComment(who, type, text, work); // Always show goals
-  } else {
-    actionCount++;
-    if (actionCount % 10 === 0) {
-      pushComment(who, type, text, work); // Only show every 10th action
-    }
-  }
-}
-
-function kickoff(world, sideReceiving){
-  const W = world.W, H = world.H;
-  const left = world.teams.left, right = world.teams.right;
-  for (const p of left.players.concat(right.players)) {
-    p.hasBall = false; p.vx=0; p.vy=0;
-  }
-  // Reset positions along initial lineup
-  if (!left.basePositions) {
-    left.basePositions = teamLineup(left.side, W, H);
-    right.basePositions = teamLineup(right.side, W, H);
-  }
-  left.players.forEach((p,i)=>{ p.x=left.basePositions[i].x; p.y=left.basePositions[i].y; });
-  right.players.forEach((p,i)=>{ p.x=right.basePositions[i].x; p.y=right.basePositions[i].y; });
-
-  const recvTeam = (left.side===sideReceiving)? left : right;
-  const kickTeam = (recvTeam===left)? right : left;
-  const kicker = kickTeam.players[4];
-  kicker.hasBall = true;
-  world.ball.x = kicker.x; world.ball.y = kicker.y; world.ball.vx=0; world.ball.vy=0;
-}
-
-/* === Physics and tick === */
-function applyPhysics(world, dt, now){
-  const all = world.teams.left.players.concat(world.teams.right.players);
-
-  // Nietzsche buff
-  const niet = all.find(p=>p.name==="Nietzsche");
-  if (niet && (now - niet.recentFailAt) < TRAITS.recurrence.buffMs) {
-    niet.stats.Will = clamp(niet.stats.Will + 12, 0, 100);
-  } else if (niet) {
-    niet.stats = withSignatureWeakness("Nietzsche"); // reset toward base
-  }
-
-  // Fichte press turbo
-  const fichte = all.find(p=>p.name==="Fichte");
-  if (fichte && (now - fichte.lastDuelWinAt) < TRAITS.ihood.ms) {
-    fichte.speed = 0.095;
-  } else if (fichte) {
-    fichte.speed = 0.075 * (ROLES[fichte.name].weak==="Pace"?0.85:1);
-  }
-
-  // Move players
-  for (const p of all){
-    // Slight friction
-    p.vx *= 0.86; p.vy *= 0.86;
-    p.x += p.vx * dt;
-    p.y += p.vy * dt;
-    // Boundaries
-    p.x = clamp(p.x, 20, world.W-20);
-    p.y = clamp(p.y, 20, world.H-20);
-
-    // Receive pass
-    if (p.pendingReceiveAt && now >= p.pendingReceiveAt) {
-      p.pendingReceiveAt = 0;
-      p.hasBall = true; world.ball.lastTouch = p; world.ball.x = p.x; world.ball.y = p.y; world.ball.vx=0; world.ball.vy=0;
-      // Assist line if pass goes to shot soon is handled by later shoot commentary, but add occasional combo
-      if (p.willReceiveFrom && (p.willReceiveFrom.name==="Hegel")) {
-        pushCommentConditional("Hegel", "combo", LINES.Hegel.combo[0], "Phenomenology of Spirit");
-      }
-      p.willReceiveFrom = null;
-    }
-  }
-
-  // Ball physics
-  if (!getBallOwner(world)) {
-    world.ball.x += world.ball.vx * dt;
-    world.ball.y += world.ball.vy * dt;
-    world.ball.vx *= 0.98; world.ball.vy *= 0.98;
-    world.ball.x = clamp(world.ball.x, 10, world.W-10);
-    world.ball.y = clamp(world.ball.y, 10, world.H-10);
-    // Pickup if colliding
-    const owner = all.find(p=> dist(p.x,p.y, world.ball.x, world.ball.y) < p.radius+4 );
-    if (owner) {
-      owner.hasBall = true; world.ball.lastTouch = owner; world.ball.vx=world.ball.vy=0;
-      if (owner.name==="Kant" && Math.random()<0.2) pushCommentConditional("Kant","shape",LINES.Kant.shape[0],"Critique of Pure Reason");
-    }
-  }
-
-  // Team morale/momentum gentle drift toward center
-  for (const t of [world.teams.left, world.teams.right]) {
-    t.momentum = lerp(t.momentum, 0.5, 0.001);
-    t.morale = lerp(t.morale, 0.5, 0.0008);
-  }
-}
-
-/* === Rendering === */
-function draw(world){
-  const { W, H } = world;
-  ctx.clearRect(0,0,W,H);
-  // Pitch
-  ctx.fillStyle = "#15202b"; ctx.fillRect(0,0,W,H);
-  // Midline
-  ctx.strokeStyle = "#233444"; ctx.lineWidth = 2;
-  ctx.beginPath(); ctx.moveTo(W/2, 10); ctx.lineTo(W/2, H-10); ctx.stroke();
-  // Center circle
-  ctx.beginPath(); ctx.arc(W/2, H/2, 50, 0, Math.PI*2); ctx.stroke();
-  // Goals
-  ctx.fillStyle = "#233444";
-  ctx.fillRect(2, H/2-60, 6, 120);
-  ctx.fillRect(W-8, H/2-60, 6, 120);
-
-  // Players
-  function drawPlayer(p) {
-    ctx.beginPath();
-    ctx.fillStyle = TEAM_COLORS[p.team];
-    ctx.arc(p.x, p.y, p.radius, 0, Math.PI*2);
-    ctx.fill();
-    // Outline if has ball
-    if (p.hasBall) {
-      ctx.strokeStyle = "#fff"; ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.arc(p.x, p.y, p.radius+2, 0, Math.PI*2); ctx.stroke();
-    }
-    // Name
-    ctx.fillStyle = "#c9d1d9"; ctx.font = "12px system-ui";
-    ctx.textAlign = "center";
-    ctx.fillText(p.name, p.x, p.y - (p.radius+8));
-    // Trait proc icons
-    if (p.trait.includes("cave") && Math.random()<0.01) {
-      drawIcon(p.x, p.y+16, "◉"); // cave glint
-    }
-    if (p.trait.includes("categorical") && Math.random()<0.01) {
-      drawIcon(p.x, p.y+16, "☑"); // duty
-    }
-    if (p.trait.includes("barrel") && Math.random()<0.01) {
-      drawIcon(p.x, p.y+16, "◗"); // barrel
-    }
-  }
-  function drawIcon(x,y,ch){
-    ctx.fillStyle = "#8b949e"; ctx.font = "12px monospace"; ctx.fillText(ch, x, y);
-  }
-
-  for (const p of world.teams.left.players) drawPlayer(p);
-  for (const p of world.teams.right.players) drawPlayer(p);
-
-  // Ball
-  const owner = getBallOwner(world);
-  const bx = owner ? owner.x : world.ball.x;
-  const by = owner ? owner.y : world.ball.y;
-  ctx.beginPath(); ctx.fillStyle = "#fff"; ctx.arc(bx, by, 4, 0, Math.PI*2); ctx.fill();
-
-  // UI bars
-  moraleAEl.style.width = `${world.teams.left.morale*100}%`;
-  moraleBEl.style.width = `${world.teams.right.morale*100}%`;
-  momAEl.style.width = `${world.teams.left.momentum*100}%`;
-  momBEl.style.width = `${world.teams.right.momentum*100}%`;
-
-  // Clock
-  const t = world.time;
-  const rem = Math.max(0, world.lengthMs - t);
-  scoreEl.textContent = `${fmtTime(t)} — ${world.teams.left.score} : ${world.teams.right.score} — ${fmtTime(rem)}`;
-}
-
-function fmtTime(ms){
-  const s = Math.floor(ms/1000);
-  const mm = String(Math.floor(s/60)).padStart(2,"0");
-  const ss = String(s%60).padStart(2,"0");
-  return `${mm}:${ss}`;
-}
-
-/* === Game loop === */
-function startMatch() {
-  const side = sideSel.value;
-  const lengthMin = parseInt(minutesSel.value,10);
-  const speed = parseInt(speedRange.value,10);
-  const focus = parseFloat(focusRange.value);
-  engine = createMatchState({
-    playerSide: side,
-    lengthMin,
-    speed,
-    tacticLeft: (side==="Greek") ? tacticA.value : tacticB.value,
-    tacticRight: (side==="Greek") ? tacticB.value : tacticA.value,
-    focus
-  });
-  // Base positions fixed
-  engine.teams.left.basePositions = teamLineup(engine.teams.left.side, engine.W, engine.H);
-  engine.teams.right.basePositions = teamLineup(engine.teams.right.side, engine.W, engine.H);
-  // Tactic label
-  tacticNameEl.textContent = `Tactic: ${ (side==="Greek")? tacticA.value : tacticB.value }`;
-  // Clear feed
-  feed.innerHTML = "";
-  pushComment("Announcer", "sketch", LINES.Generic.sketch[0], null);
-
-  pre.style.display = "none";
-  match.style.display = "block";
-  engine.running = true; engine.paused = false;
-  runLoop();
-}
-
-let raf = null, lastTs = 0, accum = 0;
-function runLoop(ts){
-  if (!engine?.running) return;
-  raf = requestAnimationFrame(runLoop);
-  if (engine.paused) { lastTs = ts || performance.now(); return; }
-  if (!lastTs) lastTs = ts || performance.now();
-  const now = ts || performance.now();
-  let dtReal = now - lastTs; lastTs = now;
-  // Fixed-timestep feel at ~20hz scaled
-  const simSpeed = engine.speed; // multiplier
-  const dt = dtReal * simSpeed; // ms
-  engine.time += dt;
-  if (engine.time >= engine.lengthMs) {
-    engine.running = false;
-    pushComment("Announcer","sketch","Full time! Philosophy 1, brute force 0.", null);
-    btnPause.disabled = true; btnResume.disabled = true;
-    cancelAnimationFrame(raf);
-    draw(engine);
-    return;
-  }
-
-  // Decision phase
-  for (const side of ["left","right"]) {
-    const teamObj = engine.teams[side];
-    const oppObj = engine.teams[side==="left"?"right":"left"];
-    for (const p of teamObj.players){
-      const intent = selectIntent(p, engine, teamObj, oppObj, now);
-      resolveIntent(p, intent, engine, teamObj, oppObj, now, []);
-    }
-  }
-
-  // Apply physics
-  applyPhysics(engine, 1, now);
-
-  // Occasional momentum line
-  if (Math.random() < 0.004) {
-    const lead = engine.teams.left.momentum > engine.teams.right.momentum ? engine.teams.left : engine.teams.right;
-    const hera = lead.players.find(p=>p.name==="Heraclitus");
-    if (hera) pushCommentConditional("Heraclitus","momentum",LINES.Heraclitus.momentum[0],"Fragments");
-  }
-
-  // Update UI + draw
-  draw(engine);
-}
-
-/* === Controls === */
-btnStart.onclick = startMatch;
-btnPause.onclick = () => { if (!engine) return; engine.paused = true; btnPause.disabled = true; btnResume.disabled = false; };
-btnResume.onclick = () => { if (!engine) return; engine.paused = false; btnPause.disabled = false; btnResume.disabled = true; };
-btnReset.onclick = () => { if (!engine) return; engine.running = false; cancelAnimationFrame(raf); match.style.display="none"; pre.style.display="block"; btnPause.disabled=false; btnResume.disabled=true; };
-btnSwitch.onclick = () => {
-  if (!engine) return;
-  // Cycle tactic for player's side
-  const keys = Object.keys(TACTICS);
-  const current = (engine.teams.left.side===sideSel.value) ? engine.teams.left : engine.teams.right;
-  const labelSel = (sideSel.value==="Greek")? tacticA : tacticB;
-  let i = keys.indexOf(labelSel.value);
-  i = (i+1)%keys.length;
-  labelSel.value = keys[i];
-  current.tactic = TACTICS[keys[i]];
-  tacticNameEl.textContent = `Tactic: ${keys[i]}`;
-  pushComment("Manager","sketch",`Switch to “${keys[i]}”. Let’s see if the thesis holds.`, null);
-};
-btnWaste.onclick = () => {
-  if (!engine) return;
-  // Reduce risk, increase shape for leading team
-  const left = engine.teams.left, right=engine.teams.right;
-  const leading = (left.score>right.score)? left : (right.score>left.score)? right : null;
-  if (!leading) { pushComment("Announcer","sketch","Time-waste requires a lead. Philosophy frowns upon vacuity.", null); return; }
-  leading.tactic = { ...leading.tactic, risk: Math.max(0.3, leading.tactic.risk-0.15), shape: (leading.tactic.shape||0)+0.12, press: Math.max(0.35, leading.tactic.press-0.1) };
-  pushComment("Fourth Official","sketch","Board shows: +∞ added time. Just kidding.", null);
-};
-
-/* === Initial help === */
-pushComment("Tip","sketch","Pick a side, choose a tactic, and hit Kick off. Switch tactics mid-match if your dialectic stalls.", null);
-</script>
+
+    <script>
+        // Game data
+        const greekTeam = [
+            {
+                name: "Socrates",
+                role: "Midfield Interrogator (C)",
+                dialectic: 95, idealism: 70, empiricism: 60, rhetoric: 90, will: 75,
+                trait: "Socratic Elenchus",
+                weakness: "Shooting"
+            },
+            {
+                name: "Plato",
+                role: "Playmaking Idealist",
+                dialectic: 85, idealism: 95, empiricism: 50, rhetoric: 80, will: 70,
+                trait: "Allegory of the Cave",
+                weakness: "Empiricism"
+            },
+            {
+                name: "Aristotle",
+                role: "Holding Regista",
+                dialectic: 90, idealism: 75, empiricism: 95, rhetoric: 70, will: 80,
+                trait: "Golden Mean",
+                weakness: "Flair"
+            },
+            {
+                name: "Heraclitus",
+                role: "Drifting Winger",
+                dialectic: 70, idealism: 80, empiricism: 65, rhetoric: 75, will: 95,
+                trait: "Everything Flows",
+                weakness: "Consistency"
+            },
+            {
+                name: "Diogenes",
+                role: "Pressing Forward",
+                dialectic: 60, idealism: 65, empiricism: 70, rhetoric: 95, will: 85,
+                trait: "Barrel Life",
+                weakness: "Team Cohesion"
+            }
+        ];
+
+        const germanTeam = [
+            {
+                name: "Kant",
+                role: "Deep-lying Organizer (C)",
+                dialectic: 85, idealism: 95, empiricism: 80, rhetoric: 75, will: 70,
+                trait: "Categorical Imperative",
+                weakness: "Pace"
+            },
+            {
+                name: "Hegel",
+                role: "Box-to-box Dialectician",
+                dialectic: 95, idealism: 85, empiricism: 70, rhetoric: 80, will: 85,
+                trait: "Absolute Spirit",
+                weakness: "Risky Turnovers"
+            },
+            {
+                name: "Schopenhauer",
+                role: "Defensive Destroyer",
+                dialectic: 75, idealism: 60, empiricism: 85, rhetoric: 70, will: 95,
+                trait: "Pessimist's Edge",
+                weakness: "Morale Drainer"
+            },
+            {
+                name: "Nietzsche",
+                role: "Poacher of Meaning",
+                dialectic: 70, idealism: 80, empiricism: 65, rhetoric: 85, will: 95,
+                trait: "Eternal Recurrence",
+                weakness: "Passes"
+            },
+            {
+                name: "Fichte",
+                role: "Energetic Presser",
+                dialectic: 80, idealism: 90, empiricism: 70, rhetoric: 75, will: 85,
+                trait: "I-hood Rush",
+                weakness: "Finishing"
+            }
+        ];
+
+        const tactics = [
+            {
+                name: "Platonic Ideal Counter",
+                description: "Deep block with visionary breaks (Idealism focus)",
+                style: "counter"
+            },
+            {
+                name: "Categorical Press",
+                description: "High structure, disciplined press (Kant's order)",
+                style: "press"
+            },
+            {
+                name: "Barrel Blitz",
+                description: "All-gas cynic swarm (Chaos incarnate)",
+                style: "chaos"
+            },
+            {
+                name: "Golden Mean Midblock",
+                description: "Balanced Aristotelian geometry",
+                style: "balanced"
+            },
+            {
+                name: "Dialectical Overload",
+                description: "Hegelian chains on one flank",
+                style: "dialectical"
+            }
+        ];
+
+        const commentaryLines = {
+            socrates: {
+                pass_success: ["Socrates performs an elenchus—question by question, the defense admits the pass.", "A Socratic dialogue unfolds: 'Do you know you have the ball?' 'No.' 'Then you don't.'"],
+                tackle_win: ["Objection sustained! A cross-examination ends with the ball pleading guilty.", "Know thyself—and know where the ball is. Socrates demonstrates both."],
+                shot_miss: ["The unexamined shot is not worth taking. This one proves the point."],
+                goal: ["I know that I know nothing—except how to find the net!"]
+            },
+            plato: {
+                pass_success: ["From the cave to the sun—Plato finds the Form of the perfect pass.", "An ideal pass, cast from the realm of perfect geometry."],
+                shot_miss: ["Alas, only a shadow of a goal appears on the wall.", "The physical ball fails to match its perfect Form."],
+                goal: ["The Republic approves: justice served, striker liberated from the cave of defeat!"],
+                assist: ["Philosopher-king creates, striker receives—the ideal city in motion."]
+            },
+            aristotle: {
+                interception: ["Empirical observation: the ball goes here. Conclusion: mine.", "The syllogism completes itself: All balls can be intercepted. This is a ball. Therefore..."],
+                pass_success: ["The Golden Mean—neither hoofed nor overcooked.", "Virtue ethics in action: the mean between cowardice and recklessness."],
+                goal: ["Excellence is not an act but a habit—and what a habitual finish!"]
+            },
+            heraclitus: {
+                dribble_win: ["You never dribble the same defender twice—he flows right past.", "Change is the only constant, and so is beating that fullback."],
+                momentum_swing: ["Flux favors the bold!", "The river of play changes course!"],
+                pass_success: ["All is flux—including this delightful through-ball."]
+            },
+            diogenes: {
+                press_win: ["Diogenes leaves his barrel to dispossess the unsuspecting.", "Shameless pressing—the cynic way!"],
+                tackle_win: ["He's searching for an honest defender. No luck.", "Virtue? I spit on virtue—and take your ball too."],
+                goal: ["A goal scored with the conviction of a man who has nothing left to lose!"]
+            },
+            kant: {
+                pass_success: ["Synthetic a priori: the pass was true before it was struck.", "By categorical imperative, this pass was morally necessary."],
+                shape_hold: ["Duty calls, and the back line answers in unison.", "The moral law within organizes the defensive line without."],
+                interception: ["Reason triumphs over impulse—ball recovered through pure practical logic."]
+            },
+            hegel: {
+                combination_play: ["Thesis, antithesis... synthesis! A one-two becomes a higher unity.", "The dialectical process reaches its logical conclusion—in the opponent's net!"],
+                turnover: ["Dialectic goes dialect-wrong.", "Even the Absolute Spirit has off days."],
+                goal: ["History culminates in this moment—the Geist finds expression through football!"]
+            },
+            schopenhauer: {
+                interception: ["Will triumphs, representation stumbles.", "The world is will—and this will wants the ball."],
+                tackle_win: ["Pessimism pays off: he expected the worst and prepared accordingly.", "The world as will and representation—mostly will in this tackle."],
+                team_effect: ["The world is suffering—especially that first touch.", "Schopenhauer's grimace affects team morale..."]
+            },
+            nietzsche: {
+                goal: ["Behold the Über-striker! A will-to-power finish.", "God is dead, but this finish is eternal!"],
+                miss: ["If you stare into the keeper, the keeper stares back.", "That which does not kill the goal attempt makes it... still a miss."],
+                comeback: ["What doesn't destroy me makes me stronger—literally!"]
+            },
+            fichte: {
+                press_win: ["The I asserts itself—possession redefined.", "Self-consciousness in action: I press, therefore I am!"],
+                tackle_win: ["The absolute I encounters the empirical not-I and wins the ball."]
+            }
+        };
+
+        let gameState = {
+            greekScore: 0,
+            germanScore: 0,
+            matchTime: 0,
+            matchRunning: false,
+            greekMomentum: 50,
+            germanMomentum: 50,
+            selectedTactic: null,
+            gameInterval: null,
+            ball: { x: 50, y: 50 },
+            greekPlayers: [],
+            germanPlayers: [],
+            gameSpeed: 1, // 1x, 2x, 4x speed multiplier
+            tickCounter: 0, // For tracking sub-second updates at 20 ticks/sec
+            ballPossession: null, // Which player has the ball
+            ballTarget: null, // Where ball is moving to
+            ballSpeed: 0 // Ball movement speed
+        };
+
+        // Initialize the game
+        function initializeGame() {
+            renderTeams();
+            renderTactics();
+            setupPitch();
+        }
+
+        function renderTeams() {
+            const greekDiv = document.getElementById('greek-team');
+            const germanDiv = document.getElementById('german-team');
+
+            greekDiv.innerHTML = greekTeam.map(player => createPlayerCard(player)).join('');
+            germanDiv.innerHTML = germanTeam.map(player => createPlayerCard(player)).join('');
+        }
+
+        function createPlayerCard(player) {
+            return `
+                <div class="player-card">
+                    <div class="player-name">${player.name}</div>
+                    <div class="player-role">${player.role}</div>
+                    <div class="player-stats">
+                        <div class="stat">
+                            <div class="stat-name">Dialectic</div>
+                            <div class="stat-value">${player.dialectic}</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-name">Idealism</div>
+                            <div class="stat-value">${player.idealism}</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-name">Will</div>
+                            <div class="stat-value">${player.will}</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-name">Rhetoric</div>
+                            <div class="stat-value">${player.rhetoric}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderTactics() {
+            const tacticsGrid = document.getElementById('tactics-grid');
+            tacticsGrid.innerHTML = tactics.map((tactic, index) => `
+                <div class="tactic-card" onclick="selectTactic(${index})">
+                    <h4>${tactic.name}</h4>
+                    <p>${tactic.description}</p>
+                </div>
+            `).join('');
+        }
+
+        function selectTactic(index) {
+            document.querySelectorAll('.tactic-card').forEach(card => card.classList.remove('selected'));
+            document.querySelectorAll('.tactic-card')[index].classList.add('selected');
+            gameState.selectedTactic = tactics[index];
+        }
+
+        function setupPitch() {
+            const pitch = document.getElementById('pitch');
+            
+            // Initialize player positions
+            gameState.greekPlayers = greekTeam.map((player, index) => ({
+                ...player,
+                x: 20 + (index * 15),
+                y: 30 + (index % 3) * 20,
+                id: `greek-${index}`
+            }));
+            
+            gameState.germanPlayers = germanTeam.map((player, index) => ({
+                ...player,
+                x: 80 - (index * 15),
+                y: 30 + (index % 3) * 20,
+                id: `german-${index}`
+            }));
+        }
+
+        function startMatch() {
+            if (!gameState.selectedTactic) {
+                alert("Please select a tactical philosophy before starting!");
+                return;
+            }
+
+            document.getElementById('setup-screen').style.display = 'none';
+            document.getElementById('match-screen').style.display = 'block';
+            
+            gameState.matchRunning = true;
+            gameState.matchTime = 0;
+            gameState.greekScore = 0;
+            gameState.germanScore = 0;
+            gameState.ballPossession = null;
+            gameState.ballTarget = null;
+            gameState.ballSpeed = 0;
+            
+            renderPitchPlayers();
+            startMatchLoop();
+            
+            // Start with a random player having possession
+            const allPlayers = [...gameState.greekPlayers, ...gameState.germanPlayers];
+            gameState.ballPossession = allPlayers[Math.floor(Math.random() * allPlayers.length)];
+            
+            addCommentary("The whistle blows! Philosophy meets football in this unprecedented clash of minds and boots!");
+        }
+
+        function renderPitchPlayers() {
+            const pitch = document.getElementById('pitch');
+            
+            // Clear existing players
+            pitch.querySelectorAll('.player-dot, .ball').forEach(el => el.remove());
+            
+            // Add Greek players
+            gameState.greekPlayers.forEach(player => {
+                const dot = document.createElement('div');
+                dot.className = 'player-dot greek';
+                dot.style.left = `${player.x}%`;
+                dot.style.top = `${player.y}%`;
+                dot.title = player.name;
+                pitch.appendChild(dot);
+            });
+            
+            // Add German players
+            gameState.germanPlayers.forEach(player => {
+                const dot = document.createElement('div');
+                dot.className = 'player-dot german';
+                dot.style.left = `${player.x}%`;
+                dot.style.top = `${player.y}%`;
+                dot.title = player.name;
+                pitch.appendChild(dot);
+            });
+            
+            // Add ball
+            const ball = document.createElement('div');
+            ball.className = 'ball';
+            ball.style.left = `${gameState.ball.x}%`;
+            ball.style.top = `${gameState.ball.y}%`;
+            pitch.appendChild(ball);
+        }
+
+        function startMatchLoop() {
+            // 20 ticks per second = 50ms intervals
+            gameState.gameInterval = setInterval(() => {
+                if (!gameState.matchRunning) return;
+                
+                gameState.tickCounter += gameState.gameSpeed;
+                
+                // Update match time every 20 ticks (every real second at 1x speed)
+                if (gameState.tickCounter >= 20) {
+                    gameState.matchTime += 1;
+                    gameState.tickCounter -= 20;
+                    updateMatchDisplay();
+                }
+                
+                simulateGameTick();
+                
+                if (gameState.matchTime >= 360) { // 6 minutes
+                    endMatch();
+                }
+            }, 50); // 50ms = 20 times per second
+        }
+
+        function updateMatchDisplay() {
+            const minutes = Math.floor(gameState.matchTime / 60);
+            const seconds = gameState.matchTime % 60;
+            document.getElementById('match-time').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            document.getElementById('greek-score').textContent = gameState.greekScore;
+            document.getElementById('german-score').textContent = gameState.germanScore;
+            
+            document.getElementById('greek-momentum').style.width = `${gameState.greekMomentum}%`;
+            document.getElementById('german-momentum').style.width = `${gameState.germanMomentum}%`;
+        }
+
+        function simulateGameTick() {
+            // Simple simulation logic
+            const randomEvent = Math.random();
+            const currentPlayer = Math.random() < 0.5 ? 
+                gameState.greekPlayers[Math.floor(Math.random() * greekTeam.length)] :
+                gameState.germanPlayers[Math.floor(Math.random() * germanTeam.length)];
+            
+            if (randomEvent < 0.02) { // Goal chance
+                simulateGoal(currentPlayer);
+            } else if (randomEvent < 0.05) { // Shot
+                simulateShot(currentPlayer);
+            } else if (randomEvent < 0.15) { // Notable action
+                simulateAction(currentPlayer);
+            }
+            
+            // Move players slightly
+            movePlayersRandomly();
+        }
+
+        function simulateGoal(player) {
+            const isGreek = gameState.greekPlayers.includes(player);
+            if (isGreek) {
+                gameState.greekScore++;
+                gameState.greekMomentum = Math.min(100, gameState.greekMomentum + 20);
+                gameState.germanMomentum = Math.max(0, gameState.germanMomentum - 15);
+            } else {
+                gameState.germanScore++;
+                gameState.germanMomentum = Math.min(100, gameState.germanMomentum + 20);
+                gameState.greekMomentum = Math.max(0, gameState.greekMomentum - 15);
+            }
+            
+            const lines = commentaryLines[player.name.toLowerCase()];
+            const goalLine = lines?.goal?.[0] || `${player.name} scores! Philosophy meets net!`;
+            addCommentary(goalLine, true);
+            
+            // Move ball to goal area momentarily, then reset to center
+            if (isGreek) {
+                moveBallTo(95, 50, 3);
+            } else {
+                moveBallTo(5, 50, 3);
+            }
+            
+            setTimeout(() => {
+                resetBallToCenter();
+                gameState.ballPossession = null;
+            }, 1000);
+        }
+
+        function moveBallTo(targetX, targetY, speed) {
+            gameState.ballTarget = { x: targetX, y: targetY };
+            gameState.ballSpeed = speed;
+        }
+
+        function resetBallToCenter() {
+            moveBallTo(50, 50, 2);
+            gameState.ballPossession = null;
+        }
+
+        function updateBallPosition() {
+            // If ball has a target, move towards it
+            if (gameState.ballTarget) {
+                const dx = gameState.ballTarget.x - gameState.ball.x;
+                const dy = gameState.ballTarget.y - gameState.ball.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance > 1) {
+                    // Move towards target
+                    const moveX = (dx / distance) * gameState.ballSpeed;
+                    const moveY = (dy / distance) * gameState.ballSpeed;
+                    
+                    gameState.ball.x = Math.max(5, Math.min(95, gameState.ball.x + moveX));
+                    gameState.ball.y = Math.max(5, Math.min(95, gameState.ball.y + moveY));
+                } else {
+                    // Reached target
+                    gameState.ball.x = gameState.ballTarget.x;
+                    gameState.ball.y = gameState.ballTarget.y;
+                    gameState.ballTarget = null;
+                    gameState.ballSpeed = 0;
+                }
+            }
+            // If a player has possession, keep ball near them
+            else if (gameState.ballPossession) {
+                const player = gameState.ballPossession;
+                const targetX = player.x + (Math.random() - 0.5) * 3; // Small offset
+                const targetY = player.y + (Math.random() - 0.5) * 3;
+                
+                gameState.ball.x = Math.max(5, Math.min(95, targetX));
+                gameState.ball.y = Math.max(5, Math.min(95, targetY));
+            }
+        }
+
+        function simulateShot(player) {
+            const lines = commentaryLines[player.name.toLowerCase()];
+            const missLine = lines?.shot_miss?.[0] || lines?.miss?.[0] || 
+                `${player.name} takes a shot but the keeper denies enlightenment!`;
+            addCommentary(missLine);
+            
+            // Ball moves towards goal then bounces back
+            const isGreek = gameState.greekPlayers.includes(player);
+            const goalX = isGreek ? 95 : 5;
+            moveBallTo(goalX, 50 + (Math.random() - 0.5) * 20, 4);
+            
+            // After a short delay, ball bounces to a random position
+            setTimeout(() => {
+                const randomX = 30 + Math.random() * 40;
+                const randomY = 30 + Math.random() * 40;
+                moveBallTo(randomX, randomY, 2);
+                gameState.ballPossession = null;
+            }, 500);
+        }
+
+        function simulateAction(player) {
+            const actions = ['pass_success', 'tackle_win', 'interception', 'dribble_win'];
+            const action = actions[Math.floor(Math.random() * actions.length)];
+            
+            const lines = commentaryLines[player.name.toLowerCase()];
+            const actionLine = lines?.[action]?.[Math.floor(Math.random() * (lines[action]?.length || 1))] ||
+                `${player.name} demonstrates ${action.replace('_', ' ')} with philosophical flair!`;
+            
+            addCommentary(actionLine);
+            
+            // Ball logic based on action
+            if (action === 'pass_success') {
+                // Pass to a teammate or nearby player
+                const isGreek = gameState.greekPlayers.includes(player);
+                const teammates = isGreek ? gameState.greekPlayers : gameState.germanPlayers;
+                const nearbyTeammates = teammates.filter(t => t !== player);
+                
+                if (nearbyTeammates.length > 0) {
+                    const target = nearbyTeammates[Math.floor(Math.random() * nearbyTeammates.length)];
+                    gameState.ballPossession = target;
+                    moveBallTo(target.x, target.y, 2);
+                }
+            } else if (action === 'tackle_win' || action === 'interception') {
+                // Player wins ball
+                gameState.ballPossession = player;
+                moveBallTo(player.x, player.y, 1.5);
+            } else if (action === 'dribble_win') {
+                // Player keeps ball, moves forward
+                gameState.ballPossession = player;
+                const isGreek = gameState.greekPlayers.includes(player);
+                const forwardX = isGreek ? Math.min(95, player.x + 10) : Math.max(5, player.x - 10);
+                moveBallTo(forwardX, player.y, 1);
+            }
+            
+            // Adjust momentum
+            const isGreek = gameState.greekPlayers.includes(player);
+            if (isGreek) {
+                gameState.greekMomentum = Math.min(100, gameState.greekMomentum + 3);
+                gameState.germanMomentum = Math.max(0, gameState.germanMomentum - 2);
+            } else {
+                gameState.germanMomentum = Math.min(100, gameState.germanMomentum + 3);
+                gameState.greekMomentum = Math.max(0, gameState.greekMomentum - 2);
+            }
+        }
+
+        function movePlayersRandomly() {
+            // Much smaller movements for smooth 20fps animation
+            gameState.greekPlayers.forEach(player => {
+                player.x = Math.max(5, Math.min(95, player.x + (Math.random() - 0.5) * 0.1));
+                player.y = Math.max(5, Math.min(95, player.y + (Math.random() - 0.5) * 0.1));
+            });
+            
+            gameState.germanPlayers.forEach(player => {
+                player.x = Math.max(5, Math.min(95, player.x + (Math.random() - 0.5) * 0.1));
+                player.y = Math.max(5, Math.min(95, player.y + (Math.random() - 0.5) * 0.1));
+            });
+            
+            // Update ball position based on new logic
+            updateBallPosition();
+            
+            renderPitchPlayers();
+        }
+
+        function addCommentary(text, isGoal = false) {
+            const commentary = document.getElementById('commentary');
+            const line = document.createElement('div');
+            line.className = `commentary-line ${isGoal ? 'goal' : ''}`;
+            line.textContent = text;
+            
+            commentary.appendChild(line);
+            commentary.scrollTop = commentary.scrollHeight;
+            
+            // Remove old lines if too many
+            if (commentary.children.length > 20) {
+                commentary.removeChild(commentary.firstChild);
+            }
+        }
+
+        function pauseMatch() {
+            gameState.matchRunning = !gameState.matchRunning;
+            const btn = event.target;
+            btn.textContent = gameState.matchRunning ? '⏸️ Pause' : '▶️ Resume';
+            
+            if (gameState.matchRunning) {
+                addCommentary("Match resumed! The philosophical battle continues...");
+            } else {
+                addCommentary("A pause for contemplation. Even philosophers need a breather.");
+            }
+        }
+
+        function adjustTactic(style) {
+            const tacticMessages = {
+                defensive: "Falling back into a more contemplative formation—sometimes wisdom lies in patience.",
+                attacking: "Forward, to glory! The offensive philosophy takes precedence!",
+                counter: "Waiting for the perfect moment to strike—like Socrates with a well-timed question."
+            };
+            
+            addCommentary(tacticMessages[style] || "Tactical adjustment in progress...");
+            
+            // Adjust momentum based on tactic
+            switch(style) {
+                case 'defensive':
+                    gameState.greekMomentum = Math.max(0, gameState.greekMomentum - 5);
+                    break;
+                case 'attacking':
+                    gameState.greekMomentum = Math.min(100, gameState.greekMomentum + 5);
+                    break;
+                case 'counter':
+                    // Balanced approach
+                    break;
+            }
+        }
+
+        function endMatch() {
+            gameState.matchRunning = false;
+            clearInterval(gameState.gameInterval);
+            
+            let endMessage;
+            if (gameState.greekScore > gameState.germanScore) {
+                endMessage = "The Ancient Greeks triumph! Philosophy's birthplace claims victory over its German inheritors!";
+            } else if (gameState.germanScore > gameState.greekScore) {
+                endMessage = "The Classical Germans prevail! Systematic thinking defeats ancient wisdom!";
+            } else {
+                endMessage = "A philosophical draw! Perhaps some questions are better left unanswered...";
+            }
+            
+            addCommentary("⏰ Full time!");
+            addCommentary(endMessage, true);
+            addCommentary("And now for something completely different... the post-match analysis begins!");
+        }
+
+        function resetGame() {
+            gameState = {
+                greekScore: 0,
+                germanScore: 0,
+                matchTime: 0,
+                matchRunning: false,
+                greekMomentum: 50,
+                germanMomentum: 50,
+                selectedTactic: null,
+                gameInterval: null,
+                ball: { x: 50, y: 50 },
+                greekPlayers: [],
+                germanPlayers: [],
+                gameSpeed: 1,
+                tickCounter: 0,
+                ballPossession: null,
+                ballTarget: null,
+                ballSpeed: 0
+            };
+            
+            clearInterval(gameState.gameInterval);
+            document.getElementById('setup-screen').style.display = 'block';
+            document.getElementById('match-screen').style.display = 'none';
+            document.getElementById('commentary').innerHTML = '';
+            document.getElementById('speed-display').textContent = '1x';
+            
+            // Reset tactic selection
+            document.querySelectorAll('.tactic-card').forEach(card => card.classList.remove('selected'));
+        }
+
+        // Special events that can occur randomly
+        function triggerSpecialEvent() {
+            const tickRate = 20;
+            const events = [
+                {
+                    text: "🎭 And now for something completely transcendent... Kant attempts a bicycle kick!",
+                    probability: 0.01 / tickRate
+                },
+                {
+                    text: "📚 VAR review by Mr. Pragma Tick: 'After consulting the archives, the decision stands!'",
+                    probability: 0.005 / tickRate
+                },
+                {
+                    text: "🦜 Dead Parrot VAR: 'This offside call is no more! It has ceased to be!'",
+                    probability: 0.003 / tickRate
+                },
+                {
+                    text: "🏺 The chorus from the Athenian stands: 'PHILOSOPHIA! PHILOSOPHIA!'",
+                    probability: 0.02 / tickRate
+                },
+                {
+                    text: "📖 Timeout for a seminar: Hegel explains why the goal was dialectically inevitable.",
+                    probability: 0.01 / tickRate
+                }
+            ];
+            
+            events.forEach(event => {
+                if (Math.random() < event.probability) {
+                    addCommentary(event.text);
+                }
+            });
+        }
+
+        function adjustSpeed() {
+            const speeds = [1, 2, 4];
+            const currentIndex = speeds.indexOf(gameState.gameSpeed);
+            const nextIndex = (currentIndex + 1) % speeds.length;
+            gameState.gameSpeed = speeds[nextIndex];
+            
+            document.getElementById('speed-display').textContent = `${gameState.gameSpeed}x`;
+            
+            const speedMessages = {
+                1: "Back to contemplative pace—philosophy requires reflection.",
+                2: "Accelerating the discourse—twice the intellectual intensity!",
+                4: "Maximum philosophical velocity—ideas at light speed!"
+            };
+            
+            addCommentary(speedMessages[gameState.gameSpeed]);
+        }
+
+        // Add special events to the game tick
+        function simulateGameTick() {
+            // Adjust event probabilities for 20 ticks per second
+            const tickRate = 20; // 20 ticks per second
+            const randomEvent = Math.random();
+            const currentPlayer = Math.random() < 0.5 ? 
+                gameState.greekPlayers[Math.floor(Math.random() * greekTeam.length)] :
+                gameState.germanPlayers[Math.floor(Math.random() * germanTeam.length)];
+            
+            // Divide original probabilities by tick rate to maintain same frequency per second
+            if (randomEvent < 0.02 / tickRate) { // Goal chance
+                simulateGoal(currentPlayer);
+            } else if (randomEvent < 0.05 / tickRate) { // Shot
+                simulateShot(currentPlayer);
+            } else if (randomEvent < 0.15 / tickRate) { // Notable action
+                simulateAction(currentPlayer);
+            }
+            
+            // Add special events (also adjusted for tick rate)
+            triggerSpecialEvent();
+            
+            // Move players with smaller increments for smooth animation
+            movePlayersRandomly();
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', initializeGame);
+    </script>
 </body>
 </html>
-
